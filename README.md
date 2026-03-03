@@ -13,7 +13,7 @@ Head-Centred View shows the world *from the snake's perspective*. The snake's he
 
 The snake's flanks are coloured, allowing you to track whether any segment you are seeing has been reflected, relative to yourself.
 
-# 🧠 What’s a Projective Plane?
+## 🧠 What’s a Projective Plane?
 
 The real projective plane (ℝP²) can be constructed by:
 1. Taking a square,
