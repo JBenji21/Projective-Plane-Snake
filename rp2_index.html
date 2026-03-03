@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Projective Plane Snake (RP²)</title>
+  <link rel="stylesheet" href="rp2_style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="hud">
+      <div class="row">
+        <div class="selectWrap">
+          <label>
+            Size
+            <select id="sizeSelect">
+              <option value="24x18">24×18</option>
+              <option value="32x24" selected>32×24</option>
+              <option value="40x30">40×30</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="selectWrap">
+          <label>
+            Speed
+            <select id="speedSelect">
+              <option value="6">Slow</option>
+              <option value="10" selected>Normal</option>
+              <option value="14">Fast</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="selectWrap">
+          <label>
+            Camera
+            <select id="cameraSelect">
+              <option value="world" selected>World</option>
+              <option value="head">Head-centred</option>
+            </select>
+          </label>
+        </div>
+
+        <button id="restartBtn" class="btn">Restart</button>
+      </div>
+
+      <label style="margin-left:12px; user-select:none;">
+        <input type="checkbox" id="headBoundsToggle">
+        Show boundaries (head view)
+      </label>
+
+      <div class="row right">
+        <div class="stat"><span class="muted">Score</span> <span id="score">0</span></div>
+        <div class="stat"><span class="muted">Mode</span> RP²</div>
+      </div>
+    </div>
+
+    <canvas id="game" width="800" height="600" aria-label="Snake game canvas"></canvas>
+
+    <div class="help muted">
+      <div>
+        <strong>Controls:</strong> Arrow keys / WASD · <strong>Pause:</strong> Space · <strong>Restart:</strong> R
+      </div>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <script src="rp2_game.js"></script>
+</body>
+</html>
