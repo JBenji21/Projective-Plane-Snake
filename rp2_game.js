@@ -13,6 +13,29 @@
   const scoreEl = document.getElementById('score');
   const statusEl = document.getElementById('status');
 
+  const highscoreListEl = document.getElementById('highscoreList');
+
+  const MAX_HIGHSCORES = 10;
+  const NAME_KEY = 'rp2snake_last_name';
+
+  function sizeKey() {
+    return `rp2snake_highscores_${config.W}x${config.H}`;
+  }
+
+  const overlayEl = document.getElementById('overlay');
+  const overlayTitleEl = document.getElementById('overlayTitle');
+  const overlayScoreEl = document.getElementById('overlayScore');
+  const overlaySizeEl = document.getElementById('overlaySize');
+  const overlayHighscoreListEl = document.getElementById('overlayHighscoreList');
+
+  const newHighScoreEl = document.getElementById('newHighScore');
+  const nameEntryEl = document.getElementById('nameEntry');
+  const nameInputEl = document.getElementById('nameInput');
+  const submitScoreBtn = document.getElementById('submitScoreBtn');
+
+  const playAgainBtn = document.getElementById('playAgainBtn');
+  const closeOverlayBtn = document.getElementById('closeOverlayBtn');
+
   /** @type {{W:number,H:number, tickHz:number}} */
   let config = { W: 32, H: 24, tickHz: 10 };
 
@@ -226,12 +249,112 @@
     statusEl.textContent = msg || '';
   }
 
+  function loadHighscores() {
+    try {
+      const raw = localStorage.getItem(sizeKey());
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHighscores(entries) {
+    localStorage.setItem(sizeKey(), JSON.stringify(entries));
+  }
+
+  function formatEntry(e) {
+    const nm = (e.name || 'Anonymous').trim() || 'Anonymous';
+    return `${nm} — ${e.score}`;
+  }
+
+  function renderOverlayList(entries, highlightTs = null) {
+    overlayHighscoreListEl.innerHTML = '';
+    for (const e of entries) {
+      const li = document.createElement('li');
+      li.textContent = formatEntry(e);
+      if (highlightTs && e.ts === highlightTs) {
+        li.style.fontWeight = '800';
+        li.style.textDecoration = 'underline';
+      }
+      overlayHighscoreListEl.appendChild(li);
+    }
+  }
+
+  function qualifiesForTop10(scoreVal, entries) {
+    if (entries.length < MAX_HIGHSCORES) return scoreVal > 0;
+    const worst = entries[entries.length - 1]?.score ?? -Infinity;
+    return scoreVal > worst;
+  }
+
+  function showOverlay() {
+    overlayEl.classList.remove('hidden');
+    overlayEl.setAttribute('aria-hidden', 'false');
+  }
+
+  function hideOverlay() {
+    overlayEl.classList.add('hidden');
+    overlayEl.setAttribute('aria-hidden', 'true');
+  }
+
+  let pendingHighscore = null; // { score, entries }
+
+  function onGameOver() {
+    overlayTitleEl.textContent = 'Game Over';
+    overlayScoreEl.textContent = String(score);
+    overlaySizeEl.textContent = `${config.W}×${config.H}`;
+
+    const entries = loadHighscores().sort((a,b) => b.score - a.score);
+    const isNew = qualifiesForTop10(score, entries);
+
+    newHighScoreEl.classList.toggle('hidden', !isNew);
+    nameEntryEl.classList.toggle('hidden', !isNew);
+
+    if (isNew) {
+      pendingHighscore = { score, entries };
+
+      // preload last used name
+      const last = (localStorage.getItem(NAME_KEY) || '').slice(0, 12);
+      nameInputEl.value = last;
+      nameInputEl.focus();
+      nameInputEl.select();
+    } else {
+      pendingHighscore = null;
+    }
+
+    renderOverlayList(entries);
+    showOverlay();
+  }
+
+  function submitPendingHighscore() {
+    if (!pendingHighscore) return;
+
+    const name = (nameInputEl.value || '').trim().slice(0, 12) || 'Anonymous';
+    localStorage.setItem(NAME_KEY, name);
+
+    const entry = { name, score: pendingHighscore.score, ts: Date.now() };
+
+    const merged = [...pendingHighscore.entries, entry]
+      .sort((a,b) => b.score - a.score)
+      .slice(0, MAX_HIGHSCORES);
+
+    saveHighscores(merged);
+
+    // Hide input after submit, keep overlay visible
+    newHighScoreEl.classList.add('hidden');
+    nameEntryEl.classList.add('hidden');
+    pendingHighscore = null;
+
+    renderOverlayList(merged, entry.ts);
+  }
+
   function reset() {
     alive = true;
     paused = false;
     score = 0;
     scoreEl.textContent = '0';
     setStatus('');
+    hideOverlay();
 
     // Start snake near center
     const cx = Math.floor(config.W / 2);
@@ -439,6 +562,7 @@ function step() {
     if (snake[i].x === nx && snake[i].y === ny) {
       alive = false;
       setStatus('Game over');
+      onGameOver();
       break;
     }
   }
@@ -687,6 +811,7 @@ function step() {
     if (k === 'r') {
       reset();
       e.preventDefault();
+      hideOverlay();
       return;
     }
 
@@ -732,6 +857,19 @@ function step() {
     });
   }
 
+  submitScoreBtn.addEventListener('click', () => submitPendingHighscore());
+    nameInputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitPendingHighscore();
+    });
+
+    playAgainBtn.addEventListener('click', () => {
+      hideOverlay();
+      reset();
+      startLoop();
+    });
+
+    closeOverlayBtn.addEventListener('click', () => hideOverlay());
+
   window.addEventListener('keydown', handleKey, { passive: false });
   window.addEventListener('resize', () => draw());
 
@@ -739,4 +877,5 @@ function step() {
   setConfigFromUI();
   reset();
   startLoop();
+  updateHighscoreList();
 })();
