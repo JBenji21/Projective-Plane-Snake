@@ -58,6 +58,36 @@
 
     <canvas id="game" width="800" height="600" aria-label="Snake game canvas"></canvas>
 
+    <div id="overlay" class="overlay hidden" aria-hidden="true">
+      <div class="overlayCard">
+        <div id="overlayTitle" class="overlayTitle">Game Over</div>
+
+        <div id="newHighScore" class="newHighScore hidden">NEW HIGH SCORE!</div>
+
+        <div id="nameEntry" class="nameEntry hidden">
+          <label>
+            Name
+            <input id="nameInput" type="text" maxlength="12" placeholder="Your name" />
+          </label>
+          <button id="submitScoreBtn" class="btn">Submit</button>
+        </div>
+
+        <div class="overlayMeta">
+          <span class="muted">Score:</span> <span id="overlayScore">0</span>
+          <span class="muted" style="margin-left:12px;">Size:</span> <span id="overlaySize">32×24</span>
+        </div>
+
+        <div class="overlayListWrap">
+          <ol id="overlayHighscoreList" class="overlayList"></ol>
+        </div>
+
+        <div class="overlayActions">
+          <button id="playAgainBtn" class="btn">Play again</button>
+          <button id="closeOverlayBtn" class="btn btnGhost">Close</button>
+        </div>
+      </div>
+    </div>
+
     <div class="help muted">
       <div>
         <strong>Controls:</strong> Arrow keys / WASD · <strong>Pause:</strong> Space · <strong>Restart:</strong> R
