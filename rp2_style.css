@@ -13,6 +13,7 @@ html, body {
   gap: 12px;
   padding: 16px;
   box-sizing: border-box;
+  position: relative;
 }
 
 .hud, .help {
@@ -132,4 +133,85 @@ canvas {
   outline: none;
   border-color: rgba(80, 255, 140, 0.6);
   box-shadow: 0 0 0 3px rgba(80, 255, 140, 0.15);
+}
+
+/* Overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.overlay.hidden { display: none; }
+
+.overlayCard {
+  pointer-events: auto;
+  width: min(520px, 92vw);
+  background: rgba(18, 22, 30, 0.92);
+  border: 1px solid rgba(232,238,247,0.22);
+  border-radius: 14px;
+  padding: 16px 16px 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  color: rgba(232,238,247,0.95);
+}
+
+.overlayTitle {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.newHighScore {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin: 6px 0 10px;
+}
+
+.nameEntry {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.nameEntry label {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  font-size: 12px;
+}
+
+.nameEntry input {
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(232,238,247,0.18);
+  background: rgba(0,0,0,0.25);
+  color: rgba(232,238,247,0.95);
+  padding: 0 10px;
+}
+
+.overlayMeta { margin: 8px 0 10px; }
+
+.overlayListWrap {
+  max-height: 240px;
+  overflow: auto;
+  border-top: 1px solid rgba(232,238,247,0.12);
+  border-bottom: 1px solid rgba(232,238,247,0.12);
+  padding: 10px 6px;
+}
+
+.overlayList { margin: 0; padding-left: 22px; }
+
+.overlayActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btnGhost {
+  background: transparent;
+  border: 1px solid rgba(232,238,247,0.22);
 }
