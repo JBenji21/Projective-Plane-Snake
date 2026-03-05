@@ -74,11 +74,11 @@
   // Snake styling
   const SNAKE_STYLE = {
     // Core fill
-    core: 'rgba(232, 238, 247, 0.62)',
+    core: 'rgba(232, 238, 247, 0.79)',
     coreHead: 'rgba(232, 238, 247, 0.92)',
     // Flanks (left/right relative to travel direction)
-    flankL: 'rgba(120, 210, 255, 0.85)',
-    flankR: 'rgba(255, 160, 210, 0.85)',
+    flankL: 'rgba(6, 51, 250, 0.8)',
+    flankR: 'rgba(255, 31, 54, 0.85)',
     outline: 'rgba(0, 0, 0, 0.22)',
     eye: 'rgba(10, 12, 18, 0.85)',
   };
@@ -253,7 +253,30 @@
     try {
       const raw = localStorage.getItem(sizeKey());
       const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
+      if (!Array.isArray(arr)) return [];
+
+      // Normalize legacy formats:
+      // - number: 12  -> {name:'', score:12, ts:0}
+      // - string: "12" -> {name:'', score:12, ts:0}
+      // - object: keep {name, score, ts}
+      const norm = [];
+      for (const e of arr) {
+        if (typeof e === 'number' && Number.isFinite(e)) {
+          norm.push({ name: '', score: e, ts: 0 });
+        } else if (typeof e === 'string' && e.trim() !== '' && Number.isFinite(Number(e))) {
+          norm.push({ name: '', score: Number(e), ts: 0 });
+        } else if (e && typeof e === 'object' && Number.isFinite(Number(e.score))) {
+          norm.push({
+            name: String(e.name ?? '').slice(0, 12),
+            score: Number(e.score),
+            ts: Number(e.ts) || 0,
+          });
+        }
+      }
+
+      // Keep it sorted + trimmed
+      norm.sort((a, b) => b.score - a.score);
+      return norm.slice(0, MAX_HIGHSCORES);
     } catch {
       return [];
     }
@@ -282,8 +305,12 @@
   }
 
   function qualifiesForTop10(scoreVal, entries) {
-    if (entries.length < MAX_HIGHSCORES) return scoreVal > 0;
-    const worst = entries[entries.length - 1]?.score ?? -Infinity;
+    if (scoreVal <= 0) return false;
+    if (entries.length < MAX_HIGHSCORES) return true;
+
+    // Compute the current worst score safely
+    let worst = Infinity;
+    for (const e of entries) worst = Math.min(worst, Number(e.score));
     return scoreVal > worst;
   }
 
