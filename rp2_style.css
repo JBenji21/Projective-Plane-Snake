@@ -215,3 +215,5 @@ canvas {
   background: transparent;
   border: 1px solid rgba(232,238,247,0.22);
 }
+
+.hidden { display: none !important; }
