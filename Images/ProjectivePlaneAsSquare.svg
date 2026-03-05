@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
+	<style type="text/css">
+		text {font-size:40px;font-style:italic;fill:#000;font-family:Nimbus Roman No9 L,serif;text-anchor:middle;}
+		.arw {stroke-width:6;}
+		.red {stroke:#cd0000;marker-end:url(#redArrow);}
+		.blue {stroke:#0000cd;marker-end:url(#blueArrow);}
+	</style>
+	
+	<defs>
+		<marker id="redArrow" markerWidth="4" markerHeight="3" refX="1" refY="1.5" orient="auto">
+			<polygon points="0,3 4,1.5 0,0" style="stroke:none;fill:#cd0000;"/>
+		</marker>
+		<marker id="blueArrow" markerWidth="4" markerHeight="3" refX="1" refY="1.5" orient="auto">
+			<polygon points="0,3 4,1.5 0,0" style="stroke:none;fill:#0000cd;"/>
+		</marker>
+	</defs>
+  
+    <rect style="fill:#cdcdcd;" width="250" height="250" x="25" y="25"/>
+   
+	<line class="arw blue" x1="25" y1="275" x2="25" y2="43"/>
+	<line class="arw red" x1="25" y1="25" x2="257" y2="25"/>
+	<line class="arw red" x1="275" y1="275" x2="43" y2="275"/>
+	<line class="arw blue" x1="275" y1="25" x2="275" y2="257"/>
+   
+    <text y="160" x="250">B</text>
+    <text y="160" x="50">B</text>
+    <text y="65" x="150">A</text>
+    <text y="260" x="150">A</text>
+</svg>
