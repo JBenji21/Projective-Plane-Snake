@@ -7,6 +7,8 @@ html, body {
 }
 
 .wrap {
+  max-width: 980px;     /* or 900 / 1100 to taste */
+  margin: 0 auto;       /* centers it */
   height: 100%;
   display: grid;
   place-items: center;
@@ -217,3 +219,30 @@ canvas {
 }
 
 .hidden { display: none !important; }
+
+.explain {
+  max-width: 600px;
+  margin: 20px auto 0;  /* centers the block */
+  padding: 0 16px;      /* keeps it off screen edges on mobile */
+  box-sizing: border-box;
+}
+
+.Diagram {
+  width: 180px;
+  margin: 10px 0;
+}
+
+.Mobius_Strip {
+  width: 200px;
+  margin: 10px 0;
+}
+
+.Klein_bottle {
+  max-height: 200;
+  margin: 10px 0;
+}
+
+.Wiki {
+  max-width: 200;
+  margin: 10px 0;
+}
