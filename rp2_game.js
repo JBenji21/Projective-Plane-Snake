@@ -823,6 +823,14 @@ function step() {
   }
 
   function handleKey(e) {
+    const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+    const isTyping =
+      tag === 'input' ||
+      tag === 'textarea' ||
+      (e.target && e.target.isContentEditable);
+    
+    if (isTyping) return;
+    
     const k = e.key.toLowerCase();
 
     // Pause
